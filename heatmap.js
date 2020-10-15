@@ -23,7 +23,7 @@ function makeHeatmap() {
     style: { //Optional styling options
       poly: {
         label: {
-          visible: false, // hides zipcodes from appearing when page initially loads, but doesn't stop it from showing up when map is manipulated by user
+          visible: false,
         }
       }
     },
@@ -36,6 +36,11 @@ function makeHeatmap() {
               "type": "zingchart.maps", // Set shape to map type
               "options": {
                 "name": "michigan_zipcodes", // Reference to the id set in loadGeoJSON()
+                "style": {
+                  "label": {
+                    visible: false,
+                  }
+                },
               }
             }],
           }
