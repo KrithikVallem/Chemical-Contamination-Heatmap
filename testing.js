@@ -11,7 +11,13 @@ async function get_michigan_zipcodes_geojson(url) {
 }
 
 async function makeChoropleth() {
-    
+    var mnPopMap = SimpleMapD3({
+        container: '.simple-map-d3-mn-pop-map',
+        datasource: 'example-data/mn-county-2010.geo.json',
+        colorOn: true,
+        colorProperty: 'POPULATION',
+        legendFormatter: d3.format(',f0')
+      });
 }
 
 async function main() {
