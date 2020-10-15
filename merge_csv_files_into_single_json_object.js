@@ -10,6 +10,13 @@ const folder_name = "chem_files";
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync')
 
+main()
+
+async function main() {
+    const chemicals_json = await make_chemicals_json();
+    console.log(JSON.stringify(chemicals_json))
+}
+
 async function make_chemicals_json() {
     const chemicals_json = {};
 
@@ -50,10 +57,3 @@ async function make_chemicals_json() {
 
     return chemicals_json;
 }
-
-async function main() {
-    const chemicals_json = await make_chemicals_json();
-    console.log(JSON.stringify(chemicals_json))
-}
-
-main()
