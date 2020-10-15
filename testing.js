@@ -10,13 +10,15 @@ async function get_michigan_zipcodes_geojson(url) {
     return geojson;
 }
 
-async function makeChoropleth() {
-    var mnPopMap = SimpleMapD3({
-        container: '.simple-map-d3-mn-pop-map',
-        datasource: 'example-data/mn-county-2010.geo.json',
-        colorOn: true,
-        colorProperty: 'POPULATION',
-        legendFormatter: d3.format(',f0')
+async function makeChoropleth(geojson) {
+    var usMap = SimpleMapD3({
+        container: '#heatmap',
+        data: geojson,
+        tooltipOn: false,
+        styles: {
+          stroke: '#EDEDED',
+          fill: '#232323'
+        }
       });
 }
 
@@ -24,7 +26,7 @@ async function main() {
     const geojson = await get_michigan_zipcodes_geojson(CONSTANTS.michigan_zipcodes_geojson_url);
     console.log(geojson);
 
-    makeChoropleth();
+    makeChoropleth(geojson);
 }
 
 main();
