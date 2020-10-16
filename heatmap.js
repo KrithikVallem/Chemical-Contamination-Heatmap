@@ -4,6 +4,8 @@
 
 // made using this article: https://blog.zingchart.com/how-to-make-a-choropleth-map/
 
+// try making a year slider like this: https://www.zingchart.com/gallery/timeline-style-map-with-slider-input
+
 const CONSTANTS = {
   geojson_path: "json_data_files/simplified_michigan_zipcodes_3_pct.geo.json",
   chemicals_data_path: "json_data_files/chemicals_data.json",
@@ -18,7 +20,7 @@ main();
 
 async function main() {
   // load the chemicals data once, not every time the map is regenerated
-  let chemicals_data = await fetch(CONSTANTS.chemicals_data_path);
+  let chemicals_data = await fetch(CONSTANTS.chemicals_data_path); // maybe I should just put the json as a variable directly in this file?
   chemicals_data = await chemicals_data.json();
 
   // add event listeners and stuff here later
@@ -30,13 +32,15 @@ async function main() {
 }
 
 // zingcharts does the heavy lifting, I just provide it with the data to display
+// this function should only take in a styles_json, nothing else
+// if you want to display data for a new chemical or year, modify the styles_json that is passed in
 function make_heatmap(styles_json) {
   zingchart.maps.loadGeoJSON({
     id: 'michigan_zipcodes', // Give the map an id
     url: CONSTANTS.geojson_path,
     mappings: { //Recommended. Allows you to property names from the GeoJSON file to ZingChart.
       id: 'ZCTA5CE10', // zip code property name in the geojson
-      name: 'ZCTA5CE10'
+      name: 'ZCTA5CE10',
     },
     width: "100%",
     height: "100%",
@@ -80,6 +84,12 @@ function get_heatmap_colors(chemicals_data, chemical_name, year) {
   let styles_json = {};
 
   let chemical_data_in_year = chemicals_data[chemical_name][year];
+  // convert every data value to a float from a string
+  // it'll still work if everything is a string, but I want to be sure that nothing gets screwed up
+  for (let key in chemical_data_in_year) {
+    chemical_data_in_year[key] = parseFloat(chemical_data_in_year[key]);
+  }
+
   let highest_contamination_value = Math.max(...Object.values(chemical_data_in_year));
   let contamination_data_pairs = Object.entries(chemical_data_in_year);
 
@@ -91,11 +101,11 @@ function get_heatmap_colors(chemicals_data, chemical_name, year) {
     styles_json[zipcode] = {
       "backgroundColor": bg_color,
       "hover-state": {
-        "border-color": "#e0e0e0",
+        "border-color": "#e0e0e0", // todo, change this to some variable
         "border-width": 2,
         "background-color": bg_color,
       },
-      "tooltip": {
+      "tooltip": { // the thing that shows up on hover
         "text": `${zipcode}<br>${value}`,
       }
     }
