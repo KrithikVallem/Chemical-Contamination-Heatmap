@@ -2,13 +2,14 @@
 // 1: run the python scripts from the ecodata github to make all the csv's in a folder called chem_files
 // 2: run this script on the folder of csv's (this file should be on the same level as the folder of csv's, not in the folder itself) 
 //    Make sure to direct the output into the file that you want (node merge_...._object.js > output.json)
+// 2.5: make sure you npm installed the two libraries needed (fs and csv-parse)
 // 3: substitute new geojson for old geojson, and heatmap will automatically update itself
 
 // folder with the csv's - change this if the folder name changes
 const folder_name = "chem_files";
 
 const fs = require('fs');
-const parse = require('csv-parse/lib/sync')
+const parse = require('csv-parse/lib/sync');
 
 main()
 
