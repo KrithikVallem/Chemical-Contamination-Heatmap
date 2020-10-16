@@ -23,18 +23,42 @@ async function main() {
   let chemicals_data = await fetch(CONSTANTS.chemicals_data_path); // maybe I should just put the json as a variable directly in this file?
   chemicals_data = await chemicals_data.json();
 
-  // add event listeners and stuff here later
-  let chemical_name = "HAA5";
-  let year = "2018";
+  // add event listeners and stuff here later for actual dropdown
+  let select_btn = document.querySelector("#select_btn");
+  select_btn.onclick = () => {
+    let [chemical_name, year] = get_new_chemical_or_year(chemicals_data);
+    let styles_json = get_heatmap_colors(chemicals_data, chemical_name, year);
+    make_heatmap(styles_json, chemical_name, year);
+  }
+}
 
-  let styles_json = get_heatmap_colors(chemicals_data, chemical_name, year);
-  make_heatmap(styles_json);
+// this is currently just a simple number selection because I'm lazy,
+// I'll make it into a nice dropdown later with the other subteam members
+function get_new_chemical_or_year(chemicals_data) {
+  let chemicals_msg = "Enter the number corresponding to the chemical you want data for:\n";  
+  let chemical_names = Object.keys(chemicals_data);
+  chemical_names.forEach((chemical, index) => {
+    chemicals_msg += `${index}: ${chemical}\n`;
+  })
+  let chosen_chemical_num = prompt(chemicals_msg);
+  let chosen_chemical = chemical_names[chosen_chemical_num];
+
+  let years_msg = "Enter the number corresponding to the year you want data for:\n";
+  let years = Object.keys(chemicals_data[chosen_chemical]);
+  years.forEach((year, index) => {
+    years_msg += `${index}: ${year}\n`;
+  })
+  let chosen_year_num = prompt(years_msg);
+  let chosen_year = years[chosen_year_num];
+
+  return [chosen_chemical, chosen_year];
 }
 
 // zingcharts does the heavy lifting, I just provide it with the data to display
-// this function should only take in a styles_json, nothing else
 // if you want to display data for a new chemical or year, modify the styles_json that is passed in
-function make_heatmap(styles_json) {
+// the chemical_name and year are only passed in here to make the heatmap title, they won't change the heatmap's data
+// you need to pass the new chemical_name and year into the get_heatmap_colors function to change the actual heatmap
+function make_heatmap(styles_json, chemical_name, year) {
   zingchart.maps.loadGeoJSON({
     id: 'michigan_zipcodes', // Give the map an id
     url: CONSTANTS.geojson_path,
@@ -55,6 +79,11 @@ function make_heatmap(styles_json) {
       zingchart.render({
         id: 'heatmap',
         data: {
+          "title": {  
+            "text": `${chemical_name} ${year}`,  
+            "font-size": 16,
+            "font-weight": "bold"
+          }, 
           "shapes": [{
             "type": "zingchart.maps", // Set shape to map type
             "options": {
