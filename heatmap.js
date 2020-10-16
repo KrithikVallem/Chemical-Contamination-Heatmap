@@ -7,7 +7,7 @@
 const CONSTANTS = {
   geojson_path: "json_data_files/simplified_michigan_zipcodes_3_pct.geo.json",
   chemicals_data_path: "json_data_files/chemicals_data.json",
-  colors: {
+  colors: { // any css-compatible colors work here, but the chroma color scales can be found at https://colorbrewer2.org/
     lowest: chroma.brewer.PuRd[0], // used for default map background (0 contaminants found)
     highest: chroma.brewer.PuRd[chroma.brewer.PuRd.length - 1], // used for the highest contaminant amount across all zipcodes
     border: chroma.brewer.PuRd[1],
