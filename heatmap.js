@@ -8,8 +8,9 @@ const CONSTANTS = {
   geojson_path: "json_data_files/simplified_michigan_zipcodes_3_pct.geo.json",
   chemicals_data_path: "json_data_files/chemicals_data.json",
   colors: {
-    lowest: "", // used for default map background (0 contaminants found)
-    highest: "",
+    lowest: chroma.brewer.PuRd[0], // used for default map background (0 contaminants found)
+    highest: chroma.brewer.PuRd[chroma.brewer.PuRd.length - 1], // used for the highest contaminant amount across all zipcodes
+    border: chroma.brewer.PuRd[1],
   }
 }
 
@@ -28,6 +29,7 @@ async function main() {
   make_heatmap(styles_json);
 }
 
+// zingcharts does the heavy lifting, I just provide it with the data to display
 function make_heatmap(styles_json) {
   zingchart.maps.loadGeoJSON({
     id: 'michigan_zipcodes', // Give the map an id
@@ -56,6 +58,8 @@ function make_heatmap(styles_json) {
               //"scale": true, // turned this off since it makes it slower
               "style": {
                 items: styles_json,
+                backgroundColor: CONSTANTS.colors.lowest,
+                borderColor: CONSTANTS.colors.border,
                 "label": {
                   visible: false,
                 }
@@ -68,19 +72,28 @@ function make_heatmap(styles_json) {
   });
 }
 
+// makes the json object that zingcharts needs to color the data into the choropleth map
+// chroma.js is used to display the color of each data point on a scale between
+// the lowest and highest color based on the ratio between each value
+// and the highest data value for this specific chemical and year
 function get_heatmap_colors(chemicals_data, chemical_name, year) {
   let styles_json = {};
 
-  let contamination_values = chemicals_data[chemical_name][year];
-  contamination_values = Object.entries(contamination_values);
+  let chemical_data_in_year = chemicals_data[chemical_name][year];
+  let highest_contamination_value = Math.max(...Object.values(chemical_data_in_year));
+  let contamination_data_pairs = Object.entries(chemical_data_in_year);
 
-  for (let [ zipcode, value ] of contamination_values) {
+  for (let [ zipcode, value ] of contamination_data_pairs) {
+    let fraction_of_highest = (value / highest_contamination_value);
+    let scale = chroma.scale([CONSTANTS.colors.lowest, CONSTANTS.colors.highest]);
+    let bg_color = scale(fraction_of_highest).hex();
+
     styles_json[zipcode] = {
-      "backgroundColor": "#756bb1",
+      "backgroundColor": bg_color,
       "hover-state": {
         "border-color": "#e0e0e0",
         "border-width": 2,
-        "background-color": "#756bb1"
+        "background-color": bg_color,
       },
       "tooltip": {
         "text": `${zipcode}<br>${value}`,
