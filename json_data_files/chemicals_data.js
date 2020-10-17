@@ -1,3 +1,5 @@
+// this was json but I made is .js so I could import it instead of fetching it :: remove lines 1 and 2 to turn back into valid json
+export const chemicals_data = 
 {
   "1,1-dichloroethane": {
     "2013": {
