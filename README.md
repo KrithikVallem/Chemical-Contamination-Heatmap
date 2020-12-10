@@ -1,12 +1,7 @@
-# Chemical Contamination Heatmap
- Chemical Contamination Heatmap for Michigan EcoData
+# An interactive website to let you view levels of chemical contaminants across the state of Michigan!
+My portion of this project mainly consisted of implementing the actual heatmap and structuring the data into neat JSON files, which you can see in this repository. To view the finished project, check out these links:
+* [Live Website](https://esun780.github.io/chem_heatmap.github.io/)
+* [Main Github Repo (this repo was merged into it)](https://github.com/esun780/chem_heatmap.github.io)
+* [Project Description](https://umecodata.github.io/website/proj_1_heatmap.html)
 
-## todo:
-* maybe try to find a way to have multiple chemicals on the heatmap at once?, might not work though due to color limitations
-* add way to export table of data for specific zipcode
-* connect map to input of chemical name
-* add slider across years & pass different json styles for each year
-* use this for slider: https://www.zingchart.com/gallery/timeline-style-map-with-slider-input
-* connect to main website
-* change color scheme
-* modify other styling parts of the map
+![](https://github.com/esun780/chem_heatmap.github.io/raw/master/main/images/heatmap_demo_image.png)
